@@ -1,0 +1,60 @@
+import heapq
+
+class Graph:
+    def __init__(self, vertices):
+        self.V = vertices
+        self.graph = [[] for _ in range(vertices)]
+
+    def add_edge(self, u, v, w):
+        self.graph[u].append((v, w))
+        self.graph[v].append((u, w))
+
+    def prim_mst(self):
+        mst = []
+        visited = [False] * self.V
+        pq = [(0, 0, -1)]  # (weight, vertex, parent)
+
+        while pq:
+            weight, curr_vertex, parent = heapq.heappop(pq)
+            if visited[curr_vertex]:
+                continue
+
+            visited[curr_vertex] = True
+            if parent != -1:
+                mst.append((parent, curr_vertex, weight))
+
+            for neighbor, edge_weight in self.graph[curr_vertex]:
+                if not visited[neighbor]:
+                    heapq.heappush(pq, (edge_weight, neighbor, curr_vertex))
+
+        return mst
+
+# Example graph
+g = Graph(5)
+g.add_edge(0, 1, 2)
+g.add_edge(0, 3, 6)
+g.add_edge(1, 2, 3)
+g.add_edge(1, 3, 8)
+g.add_edge(1, 4, 5)
+g.add_edge(2, 4, 7)
+g.add_edge(3, 4, 9)
+
+mst = g.prim_mst()
+
+# Print the Minimum Spanning Tree
+print("Minimum Spanning Tree:")
+total_weight = 0
+for edge in mst:
+    parent, child, weight = edge
+    total_weight += weight
+    print(f"{parent} - {child}, Weight: {weight}")
+
+print("Total Weight of MST:", total_weight)
+
+Output
+Minimum Spanning Tree:
+0 - 1, Weight: 2
+1 - 2, Weight: 3
+0 - 3, Weight: 6
+1 - 4, Weight: 5
+Total Weight of MST: 16
