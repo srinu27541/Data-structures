@@ -1,0 +1,81 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+#define MAX_VERTICES 100
+
+typedef struct Node {
+    int vertex;
+    struct Node* next;
+} Node;
+
+typedef struct Graph {
+    Node* vertices[MAX_VERTICES];
+    int visited[MAX_VERTICES];
+    int numVertices;
+} Graph;
+
+Node* createNode(int vertex) {
+    Node* newNode = (Node*)malloc(sizeof(Node));
+    newNode->vertex = vertex;
+    newNode->next = NULL;
+    return newNode;
+}
+
+Graph* createGraph(int numVertices) {
+    Graph* graph = (Graph*)malloc(sizeof(Graph));
+    graph->numVertices = numVertices;
+    for (int i = 0; i < numVertices; ++i) {
+        graph->vertices[i] = NULL;
+        graph->visited[i] = 0;
+    }
+    return graph;
+}
+
+void addEdge(Graph* graph, int src, int dest) {
+    Node* newNode = createNode(dest);
+    newNode->next = graph->vertices[src];
+    graph->vertices[src] = newNode;
+}
+
+void dfs(Graph* graph, int vertex) {
+    graph->visited[vertex] = 1;
+    printf("%d ", vertex);
+
+    Node* currentNode = graph->vertices[vertex];
+    while (currentNode != NULL) {
+        int adjacentVertex = currentNode->vertex;
+        if (!graph->visited[adjacentVertex]) {
+            dfs(graph, adjacentVertex);
+        }
+        currentNode = currentNode->next;
+    }
+}
+
+int main() {
+    int numVertices, numEdges;
+    printf("Enter the number of vertices and edges: ");
+    scanf("%d %d", &numVertices, &numEdges);
+
+    Graph* graph = createGraph(numVertices);
+
+    printf("Enter the edges (src -> dest):\n");
+    for (int i = 0; i < numEdges; ++i) {
+        int src, dest;
+        scanf("%d %d", &src, &dest);
+        addEdge(graph, src, dest);
+    }
+
+    int startVertex;
+    printf("Enter the starting vertex for DFS: ");
+    scanf("%d", &startVertex);
+
+    printf("DFS traversal starting from vertex %d:\n", startVertex);
+    dfs(graph, startVertex);
+    printf("\n");
+
+    return 0;
+}
+Output
+Enter the number of vertices and edges: 6,6
+Enter the edges (src -> dest):
+Segmentation fault
