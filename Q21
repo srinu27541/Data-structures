@@ -97,3 +97,6 @@ int main() {
     
     return 0;
 }
+Output
+Breadth First Traversal starting from vertex 0:
+0 2 1 6 5 4 3
